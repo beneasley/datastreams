@@ -1,0 +1,50 @@
+##############################################################################
+#####################    process_api_data_streams.py     #####################
+##############################################################################
+# Python script to process API streams.
+#
+# INPUT - BDSI_ID is the brand data source instance id. Multiple entry is 
+# allowed separated by comma
+# INPUT - startDate is the starting date from which you want to process.
+#         Format: 'YYYY-MM-dd'
+# INPUT - endDate is the ending date at which you want to process 
+#		  Format: 'YYYY-MM-dd'
+##############################   Initialize   ################################
+from __future__ import print_function
+import requests
+import json
+import datetime
+import os
+import time
+
+##############################   User Input   ################################
+### Add the data stream IDs you'd like to reprocess in the variable below 
+
+BDSI_ID= [1446739, 1328798]
+
+
+##Update the appropriate data ranges below
+startDate = "2018-01-01"
+endDate = "2018-01-07"
+#userEmail = ""
+#userPassword = ""
+
+#############################   Authenticate   ###############################
+### add your API token below
+token= "30fefb0a-abcdefghijklm1234"
+
+headers = {'Content-Type': 'application/json; charset=UTF-8', 'token': token}
+
+####################   Loop through BDSI and Process   #######################
+x = 0
+for bdsi in BDSI_ID:
+	data = '{"ids":[%s],"startDate":"%s","endDate":"%s"}' % (BDSI_ID[x], startDate, endDate)
+	print(data)
+	
+	#f2 = open(os.path.expanduser("~/Documents/API_dev/responses/process_api_data_streams" + str(BDSI_ID[x]) +"_"+ str(datetime.datetime.today())+ ".txt"), "w")
+	#print(data,file=f2)
+
+	process = requests.post('https://app.datorama.com/services/landingzone/datastream/process', headers=headers, data=data)
+	print("      PROCESS STATUS: "+str(process.status_code))
+
+	x = x + 1 
